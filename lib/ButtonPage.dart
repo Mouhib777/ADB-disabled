@@ -19,6 +19,16 @@ class _ButtonPageState extends State<ButtonPage> {
     }
   }
 
+  void enableUSBFileTransfer() async {
+    try {
+      await MethodChannel('adb_disable_app')
+          .invokeMethod('enableUSBFileTransfer');
+      print('USB file transfer enabled successfully.');
+    } catch (e) {
+      print('Failed to enable USB file transfer: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +40,8 @@ class _ButtonPageState extends State<ButtonPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(onPressed: () {}, child: Text("Enable")),
+            ElevatedButton(
+                onPressed: enableUSBFileTransfer, child: Text("Enable")),
             SizedBox(
               height: 20,
             ),
