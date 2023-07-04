@@ -15,8 +15,17 @@ class _ButtonPageState extends State<ButtonPage> {
         title: Text("ADB Disabled"),
         centerTitle: true,
       ),
-      body: Column(
-        children: [],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(onPressed: () {}, child: Text("Enable")),
+            SizedBox(
+              height: 20,
+            ),
+            ElevatedButton(onPressed: () {}, child: Text("Disabled"))
+          ],
+        ),
       ),
     );
   }
