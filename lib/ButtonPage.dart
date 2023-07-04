@@ -9,12 +9,13 @@ class ButtonPage extends StatefulWidget {
 }
 
 class _ButtonPageState extends State<ButtonPage> {
-  static const adbChannel = MethodChannel('adb_disable_app/channel');
-  void disableADB() async {
+  static const MethodChannel _channel = MethodChannel('adb_disable_app');
+
+  static Future<void> disableUSBFileTransfer() async {
     try {
-      await adbChannel.invokeMethod('disableADB');
-    } on PlatformException catch (e) {
-      print('Failed to disable ADB: ${e.message}');
+      await _channel.invokeMethod('disableUSBFileTransfer');
+    } catch (e) {
+      print('Failed to disable USB file transfer: $e');
     }
   }
 
@@ -22,7 +23,7 @@ class _ButtonPageState extends State<ButtonPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("ADB Disabled"),
+        title: Text("ADB Disabler"),
         centerTitle: true,
       ),
       body: Center(
@@ -33,7 +34,8 @@ class _ButtonPageState extends State<ButtonPage> {
             SizedBox(
               height: 20,
             ),
-            ElevatedButton(onPressed: disableADB, child: Text("Disabled"))
+            ElevatedButton(
+                onPressed: disableUSBFileTransfer, child: Text("Disabled"))
           ],
         ),
       ),
