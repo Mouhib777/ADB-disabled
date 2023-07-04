@@ -3,6 +3,8 @@
     
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.MTP_DISABLE" />
+
     <application
         android:label="adb_disabled"
         android:name="${applicationName}"
