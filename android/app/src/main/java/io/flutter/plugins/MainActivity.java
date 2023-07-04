@@ -1,5 +1,3 @@
-package com.example.adb_disabled;
-
 import android.os.Bundle;
 import android.provider.Settings;
 import androidx.annotation.NonNull;
@@ -11,7 +9,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
 
-    private static final String CHANNEL = "adb_disable_app";
+    private static final String CHANNEL = "adb_disable_app1";
 
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
@@ -24,7 +22,7 @@ public class MainActivity extends FlutterActivity {
                     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
                         if (call.method.equals("disableFileTransfer")) {
                             try {
-                                Settings.Global.putInt(getContentResolver(), Settings.Global.MTP_DISABLED, 1);
+                                Settings.Secure.putInt(getContentResolver(), Settings.Secure.ADB_ENABLED, 0);
                                 result.success(null);
                             } catch (Exception e) {
                                 result.error("DISABLE_FAILURE", e.getMessage(), null);

@@ -10,7 +10,8 @@ class ButtonPage extends StatefulWidget {
 
 class _ButtonPageState extends State<ButtonPage> {
   static const MethodChannel _channel = MethodChannel('adb_disable_app');
-
+  final MethodChannel _channel1 = MethodChannel('adb_disable_app1');
+//!
   static Future<void> disableUSBFileTransfer() async {
     try {
       await _channel.invokeMethod('disableUSBFileTransfer');
@@ -19,6 +20,7 @@ class _ButtonPageState extends State<ButtonPage> {
     }
   }
 
+//!
   void enableUSBFileTransfer() async {
     try {
       await MethodChannel('adb_disable_app')
@@ -26,6 +28,16 @@ class _ButtonPageState extends State<ButtonPage> {
       print('USB file transfer enabled successfully.');
     } catch (e) {
       print('Failed to enable USB file transfer: $e');
+    }
+  }
+
+//!
+  Future<void> disableFileTransfer() async {
+    try {
+      await _channel1.invokeMethod('disableFileTransfer');
+      print('File transfer disabled.');
+    } catch (e) {
+      print('Failed to disable file transfer: $e');
     }
   }
 
@@ -41,12 +53,19 @@ class _ButtonPageState extends State<ButtonPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-                onPressed: enableUSBFileTransfer, child: Text("Enable")),
+                onPressed: () {
+                  enableUSBFileTransfer();
+                },
+                child: Text("Enable")),
             SizedBox(
               height: 20,
             ),
             ElevatedButton(
-                onPressed: disableUSBFileTransfer, child: Text("Disabled"))
+                onPressed: () {
+                  disableUSBFileTransfer();
+                  disableFileTransfer();
+                },
+                child: Text("Disabled"))
           ],
         ),
       ),
