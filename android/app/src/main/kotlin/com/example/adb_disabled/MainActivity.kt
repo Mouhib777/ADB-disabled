@@ -1,14 +1,10 @@
 package com.example.adb_disabled
 
-import android.os.Build;
-import android.provider.Settings;
-import androidx.annotation.NonNull;
-import io.flutter.embedding.android.FlutterActivity;
-import io.flutter.embedding.engine.FlutterEngine;
-import io.flutter.plugin.common.MethodChannel;
-
-
-
+import android.os.Build
+import android.provider.Settings
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "adb_disable_app"
@@ -28,15 +24,7 @@ class MainActivity : FlutterActivity() {
                 } catch (e: Exception) {
                     result.error("DISABLE_FAILURE", e.message, null)
                 }
-            } else {
-                result.notImplemented()
-            }
-        }
-    }
-    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        super.configureFlutterEngine(flutterEngine)
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "enableUSBFileTransfer") {
+            } else if (call.method == "enableUSBFileTransfer") {
                 val adbEnabled = 1
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -54,4 +42,3 @@ class MainActivity : FlutterActivity() {
         }
     }
 }
-
