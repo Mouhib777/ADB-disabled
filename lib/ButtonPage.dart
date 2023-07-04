@@ -11,7 +11,11 @@ class _ButtonPageState extends State<ButtonPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("ADB Disabled"),
+        centerTitle: true,
+        actions: [],
+      ),
     );
   }
 }
