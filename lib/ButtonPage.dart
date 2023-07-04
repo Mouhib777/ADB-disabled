@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ButtonPage extends StatefulWidget {
   const ButtonPage({super.key});
@@ -8,6 +9,15 @@ class ButtonPage extends StatefulWidget {
 }
 
 class _ButtonPageState extends State<ButtonPage> {
+  static const adbChannel = MethodChannel('adb_disable_app/channel');
+  void disableADB() async {
+    try {
+      await adbChannel.invokeMethod('disableADB');
+    } on PlatformException catch (e) {
+      print('Failed to disable ADB: ${e.message}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +33,7 @@ class _ButtonPageState extends State<ButtonPage> {
             SizedBox(
               height: 20,
             ),
-            ElevatedButton(onPressed: () {}, child: Text("Disabled"))
+            ElevatedButton(onPressed: disableADB, child: Text("Disabled"))
           ],
         ),
       ),
