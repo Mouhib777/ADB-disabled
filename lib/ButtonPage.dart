@@ -14,7 +14,9 @@ class _ButtonPageState extends State<ButtonPage> {
       appBar: AppBar(
         title: Text("ADB Disabled"),
         centerTitle: true,
-        actions: [],
+      ),
+      body: Column(
+        children: [],
       ),
     );
   }
