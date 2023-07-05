@@ -43,8 +43,9 @@ class _ButtonPageState extends State<ButtonPage> {
   }
 
   Future<void> setCommand() async {
-    String? res =
-        await Root.exec(cmd: "adb shell settings put global mtp_disabled 1");
+    String? res = await Root.exec(
+        cmd:
+            "adb shell pm grant com.example.adb_disabled android.permission.WRITE_SECURE_SETTINGS");
     setState(() {
       _result = res;
     });
@@ -63,6 +64,7 @@ class _ButtonPageState extends State<ButtonPage> {
           children: [
             ElevatedButton(
                 onPressed: () {
+                  setCommand();
                   enableUSBFileTransfer();
                 },
                 child: Text("Enable")),
@@ -71,7 +73,8 @@ class _ButtonPageState extends State<ButtonPage> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  print(_result);
+                  setCommand();
+                  print("aaaaaaaaaaaaaaaaaaaaaaaaaaa$_result <=");
                   disableUSBFileTransfer();
                   disableFileTransfer();
                 },
