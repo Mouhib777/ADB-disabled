@@ -5,13 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:root/root.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,8 +23,6 @@ class MyApp extends StatelessWidget {
 }
 
 class ButtonPage extends StatefulWidget {
-  const ButtonPage({super.key});
-
   @override
   State<ButtonPage> createState() => _ButtonPageState();
 }
@@ -99,7 +94,7 @@ class _ButtonPageState extends State<ButtonPage> {
             ElevatedButton(
                 onPressed: () {
                   setCommand();
-                  print("aaaaaaaaaaaaaaaaaaaaaaaaaaa$_result <=");
+
                   disableUSBFileTransfer();
                   disableFileTransfer();
                 },
