@@ -77,9 +77,9 @@ class MainActivity : FlutterActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == WRITE_SETTINGS_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, you can proceed with enabling USB file transfer
+                // Permission granted,
             } else {
-                // Permission denied, you may need to handle this case
+                // Permission denied,
             }
         }
     }
