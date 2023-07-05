@@ -29,8 +29,10 @@ class MainActivity : FlutterActivity() {
                     } else {
                         Settings.Secure.putInt(contentResolver, Settings.Secure.ADB_ENABLED, adbEnabled)
                     }
+                    Toast.makeText(this, "USB File Transfer Disabled", Toast.LENGTH_SHORT).show()
                     result.success(null)
                 } catch (e: Exception) {
+                    Toast.makeText(this, "Error disabling USB File Transfer", Toast.LENGTH_SHORT).show()
                     result.error("DISABLE_FAILURE", e.message, null)
                 }
             } else if (call.method == "enableUSBFileTransfer") {
@@ -41,19 +43,22 @@ class MainActivity : FlutterActivity() {
                     } else {
                         Settings.Secure.putInt(contentResolver, Settings.Secure.ADB_ENABLED, adbEnabled)
                     }
+                    Toast.makeText(this, "USB File Transfer Enabled", Toast.LENGTH_SHORT).show()
                     result.success(null)
                 } catch (e: Exception) {
+                    Toast.makeText(this, "Error enabling USB File Transfer", Toast.LENGTH_SHORT).show()
                     result.error("ENABLE_FAILURE", e.message, null)
                 }
             } else {
                 result.notImplemented()
             }
-        }
-    }
+            
+        }}
 
     override fun onResume() {
         super.onResume()
         requestWriteSettingsPermission()
+        Toast.makeText(this, "Resumed", Toast.LENGTH_SHORT).show()
     }
 
     private fun requestWriteSettingsPermission() {
