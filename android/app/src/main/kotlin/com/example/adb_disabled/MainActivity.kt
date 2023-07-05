@@ -9,6 +9,7 @@ import io.flutter.plugin.common.MethodChannel
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.widget.Toast
 
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -78,8 +79,10 @@ class MainActivity : FlutterActivity() {
         if (requestCode == WRITE_SETTINGS_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted,
+                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
             } else {
                 // Permission denied,
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
