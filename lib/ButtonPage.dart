@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:root/root.dart';
 
 class ButtonPage extends StatefulWidget {
   const ButtonPage({super.key});
@@ -9,8 +10,8 @@ class ButtonPage extends StatefulWidget {
 }
 
 class _ButtonPageState extends State<ButtonPage> {
+  String? _result;
   static const MethodChannel _channel = MethodChannel('adb_disable_app');
-  final MethodChannel _channel1 = MethodChannel('adb_disable_app1');
 //!
   static Future<void> disableUSBFileTransfer() async {
     try {
@@ -34,11 +35,19 @@ class _ButtonPageState extends State<ButtonPage> {
 //!
   Future<void> disableFileTransfer() async {
     try {
-      await _channel1.invokeMethod('disableFileTransfer');
+      await _channel.invokeMethod('disableFileTransfer');
       print('File transfer disabled.');
     } catch (e) {
       print('Failed to disable file transfer: $e');
     }
+  }
+
+  Future<void> setCommand() async {
+    String? res =
+        await Root.exec(cmd: "adb shell settings put global mtp_disabled 1");
+    setState(() {
+      _result = res;
+    });
   }
 
   @override
@@ -62,6 +71,7 @@ class _ButtonPageState extends State<ButtonPage> {
             ),
             ElevatedButton(
                 onPressed: () {
+                  print(_result);
                   disableUSBFileTransfer();
                   disableFileTransfer();
                 },
