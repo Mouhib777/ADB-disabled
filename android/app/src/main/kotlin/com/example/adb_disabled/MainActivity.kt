@@ -21,6 +21,7 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+           //!
             if (call.method == "disableUSBFileTransfer") {
                 val adbEnabled = 0
                 try {
@@ -35,6 +36,7 @@ class MainActivity : FlutterActivity() {
                     Toast.makeText(this, "Error disabling USB File Transfer", Toast.LENGTH_SHORT).show()
                     result.error("DISABLE_FAILURE", e.message, null)
                 }
+                //!
             } else if (call.method == "enableUSBFileTransfer") {
                 val adbEnabled = 1
                 try {
@@ -52,13 +54,9 @@ class MainActivity : FlutterActivity() {
             } else {
                 result.notImplemented()
             }
-            
-        }}
+        }
 
-    override fun onResume() {
-        super.onResume()
-        requestWriteSettingsPermission()
-        Toast.makeText(this, "Resumed", Toast.LENGTH_SHORT).show()
+        requestWriteSettingsPermission() // Request permission when the activity is configured
     }
 
     private fun requestWriteSettingsPermission() {
@@ -83,11 +81,11 @@ class MainActivity : FlutterActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == WRITE_SETTINGS_PERMISSION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted,
-                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+                // Permission granted
+                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show()
             } else {
-                // Permission denied,
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                // Permission denied
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
             }
         }
     }
