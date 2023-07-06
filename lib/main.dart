@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:process_run/process_run.dart';
+import 'package:root/root.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,52 +11,57 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'MTP disabler',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-      ),
-      home: ButtonPage(),
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'MTP disabler',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: ButtonPage());
   }
 }
 
 class ButtonPage extends StatefulWidget {
   @override
-  _ButtonPageState createState() => _ButtonPageState();
+  State<ButtonPage> createState() => _ButtonPageState();
 }
 
 class _ButtonPageState extends State<ButtonPage> {
   String? _result;
-
-  Future<void> disableUSBFileTransfer() async {
+  static const MethodChannel _channel = MethodChannel('adb_disable_app');
+//!
+  static Future<void> disableUSBFileTransfer() async {
     try {
-      await run(
-          'adb', ['shell', 'settings', 'put', 'global', 'adb_enabled', '0']);
-      _showToast('USB File Transfer Disabled');
+      await _channel.invokeMethod('disableUSBFileTransfer');
     } catch (e) {
       print('Failed to disable USB file transfer: $e');
-      _showToast('Failed to disable USB File Transfer');
     }
   }
 
-  Future<void> enableUSBFileTransfer() async {
+//!
+  void enableUSBFileTransfer() async {
     try {
-      await run(
-          'adb', ['shell', 'settings', 'put', 'global', 'adb_enabled', '1']);
-      _showToast('USB File Transfer Enabled');
+      await MethodChannel('adb_disable_app')
+          .invokeMethod('enableUSBFileTransfer');
+      print('USB file transfer enabled successfully.');
     } catch (e) {
       print('Failed to enable USB file transfer: $e');
-      _showToast('Failed to enable USB File Transfer');
     }
   }
 
-  void _showToast(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+//!
+
+//!
+  Future<void> setCommand() async {
+    String? res = await Root.exec(
+        cmd:
+            "adb shell pm grant com.example.adb_disabled android.permission.WRITE_SECURE_SETTINGS");
+    setState(() {
+      _result = res;
+    });
   }
 
+//!
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,14 +74,21 @@ class _ButtonPageState extends State<ButtonPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: disableUSBFileTransfer,
-              child: Text("Disable"),
+                onPressed: () {
+                  setCommand();
+                  enableUSBFileTransfer();
+                },
+                child: Text("Enable")),
+            SizedBox(
+              height: 20,
             ),
-            SizedBox(height: 20),
             ElevatedButton(
-              onPressed: enableUSBFileTransfer,
-              child: Text("Enable"),
-            ),
+                onPressed: () {
+                  setCommand();
+
+                  disableUSBFileTransfer();
+                },
+                child: Text("Disabled"))
           ],
         ),
       ),
