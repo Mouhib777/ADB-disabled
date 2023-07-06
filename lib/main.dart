@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:process_run/cmd_run.dart';
+import 'package:process_run/process_run.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,7 +30,8 @@ class _ButtonPageState extends State<ButtonPage> {
 
   Future<void> disableUSBFileTransfer() async {
     try {
-      await run('adb shell settings put global adb_enabled 0');
+      await run(
+          'adb', ['shell', 'settings', 'put', 'global', 'adb_enabled', '0']);
       _showToast('USB File Transfer Disabled');
     } catch (e) {
       print('Failed to disable USB file transfer: $e');
@@ -40,7 +41,8 @@ class _ButtonPageState extends State<ButtonPage> {
 
   Future<void> enableUSBFileTransfer() async {
     try {
-      await run('adb shell settings put global adb_enabled 1');
+      await run(
+          'adb', ['shell', 'settings', 'put', 'global', 'adb_enabled', '1']);
       _showToast('USB File Transfer Enabled');
     } catch (e) {
       print('Failed to enable USB file transfer: $e');
