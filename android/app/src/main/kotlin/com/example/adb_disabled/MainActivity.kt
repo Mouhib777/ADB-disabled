@@ -1,20 +1,18 @@
 package com.example.adb_disabled
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.hardware.usb.UsbManager
 import android.os.Build
 import android.provider.Settings
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-
-import android.Manifest
-import android.content.pm.PackageManager
-import android.content.Context
-import android.widget.Toast
-import android.hardware.usb.UsbManager
-
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL = "adb_disable_app"
@@ -23,66 +21,10 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
-           //!
             if (call.method == "disableUSBFileTransfer") {
-                val adbEnabled = 0
-                try {
-                    
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                        Settings.Global.putInt(contentResolver, Settings.Global.ADB_ENABLED, adbEnabled)
-                        Settings.Global.putInt(contentResolver, "mtp_enabled", 0)
-                    } else {
-                        Settings.Secure.putInt(contentResolver, Settings.Secure.ADB_ENABLED, adbEnabled)
-                        Settings.Secure.putInt(contentResolver, "mtp_enabled", 0)
-                    }
-                    Toast.makeText(this, "ADB Disabled", Toast.LENGTH_SHORT).show()
-                    result.success(null)
-                } catch (e: Exception) {
-                    Toast.makeText(this, "Error disabling ADB", Toast.LENGTH_SHORT).show()
-                    result.error("DISABLE_FAILURE", e.message, null)
-                }
-                try {
-                    val usbManager = getSystemService(Context.USB_SERVICE) as UsbManager
-                    val usbDeviceConnection = usbManager.javaClass.getMethod("getDeviceConnection").invoke(usbManager)
-                    val setEnabledFunction = usbDeviceConnection.javaClass.getMethod("setEnabled", Boolean::class.javaPrimitiveType)
-                    setEnabledFunction.invoke(usbDeviceConnection, false)
-                    Toast.makeText(this, "USB File Transfer Disabled", Toast.LENGTH_SHORT).show()
-                    result.success(null)
-                } catch (e: Exception) {
-                    Toast.makeText(this, "Error disabling USB File Transfer", Toast.LENGTH_SHORT).show()
-                    result.error("DISABLE_FAILURE", e.message, null)
-                }
-            
-                
-                
-                //!
+                disableUSBFileTransfer(result)
             } else if (call.method == "enableUSBFileTransfer") {
-                val adbEnabled = 1
-                try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                        Settings.Global.putInt(contentResolver, Settings.Global.ADB_ENABLED, adbEnabled)
-                        Settings.Global.putInt(contentResolver, "mtp_enabled", 1)
-                    } else {
-                        Settings.Secure.putInt(contentResolver, Settings.Secure.ADB_ENABLED, adbEnabled)
-                        Settings.Secure.putInt(contentResolver, "mtp_enabled", 1)
-                    }
-                    Toast.makeText(this, "ADB Enabled", Toast.LENGTH_SHORT).show()
-                    result.success(null)
-                } catch (e: Exception) {
-                    Toast.makeText(this, "Error enabling ADB", Toast.LENGTH_SHORT).show()
-                    result.error("ENABLE_FAILURE", e.message, null)
-                }
-                try {
-                    val usbManager = getSystemService(Context.USB_SERVICE) as UsbManager
-                    val usbDeviceConnection = usbManager.javaClass.getMethod("getDeviceConnection").invoke(usbManager)
-                    val setEnabledFunction = usbDeviceConnection.javaClass.getMethod("setEnabled", Boolean::class.javaPrimitiveType)
-                    setEnabledFunction.invoke(usbDeviceConnection, true)
-                    Toast.makeText(this, "USB File Transfer Enabled", Toast.LENGTH_SHORT).show()
-                    result.success(null)
-                } catch (e: Exception) {
-                    Toast.makeText(this, "Error enabling USB File Transfer", Toast.LENGTH_SHORT).show()
-                    result.error("ENABLE_FAILURE", e.message, null)
-                }
+                enableUSBFileTransfer(result)
             } else {
                 result.notImplemented()
             }
@@ -91,10 +33,60 @@ class MainActivity : FlutterActivity() {
         requestWriteSettingsPermission() // Request permission when the activity is configured
     }
 
+    private fun disableUSBFileTransfer(result: MethodChannel.Result) {
+        val adbEnabled = 0
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                Settings.Global.putInt(contentResolver, Settings.Global.ADB_ENABLED, adbEnabled)
+                Settings.Global.putInt(contentResolver, "mtp_enabled", 0)
+            } else {
+                Settings.Secure.putInt(contentResolver, Settings.Secure.ADB_ENABLED, adbEnabled)
+                Settings.Secure.putInt(contentResolver, "mtp_enabled", 0)
+            }
+            Toast.makeText(this, "USB File Transfer Disabled", Toast.LENGTH_SHORT).show()
+
+            val usbManager = getSystemService(Context.USB_SERVICE) as UsbManager
+            val usbDeviceConnection = usbManager.javaClass.getMethod("getDeviceConnection").invoke(usbManager)
+            val setEnabledFunction = usbDeviceConnection.javaClass.getMethod("setEnabled", Boolean::class.javaPrimitiveType)
+            setEnabledFunction.invoke(usbDeviceConnection, false)
+
+            result.success(null)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error disabling USB File Transfer", Toast.LENGTH_SHORT).show()
+            result.error("DISABLE_FAILURE", e.message, null)
+        }
+    }
+
+    private fun enableUSBFileTransfer(result: MethodChannel.Result) {
+        val adbEnabled = 1
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                Settings.Global.putInt(contentResolver, Settings.Global.ADB_ENABLED, adbEnabled)
+                Settings.Global.putInt(contentResolver, "mtp_enabled", 1)
+            } else {
+                Settings.Secure.putInt(contentResolver, Settings.Secure.ADB_ENABLED, adbEnabled)
+                Settings.Secure.putInt(contentResolver, "mtp_enabled", 1)
+            }
+            Toast.makeText(this, "USB File Transfer Enabled", Toast.LENGTH_SHORT).show()
+
+            val usbManager = getSystemService(Context.USB_SERVICE) as UsbManager
+            val usbDeviceConnection = usbManager.javaClass.getMethod("getDeviceConnection").invoke(usbManager)
+            val setEnabledFunction = usbDeviceConnection.javaClass.getMethod("setEnabled", Boolean::class.javaPrimitiveType)
+            setEnabledFunction.invoke(usbDeviceConnection, true)
+
+            result.success(null)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error enabling USB File Transfer", Toast.LENGTH_SHORT).show()
+            result.error("ENABLE_FAILURE", e.message, null)
+        }
+    }
+
     private fun requestWriteSettingsPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_SECURE_SETTINGS)
-                != PackageManager.PERMISSION_GRANTED
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_SECURE_SETTINGS
+                ) != PackageManager.PERMISSION_GRANTED
             ) {
                 ActivityCompat.requestPermissions(
                     this,
