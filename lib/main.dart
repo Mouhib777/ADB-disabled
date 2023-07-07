@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:root/root.dart';
 
@@ -87,7 +86,6 @@ class _ButtonPageState extends State<ButtonPage> {
             ElevatedButton(
                 onPressed: () {
                   setCommand();
-
                   disableUSBFileTransfer();
                 },
                 child: Text("Disabled"))
