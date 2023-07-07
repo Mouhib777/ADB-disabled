@@ -35,10 +35,10 @@ class MainActivity : FlutterActivity() {
                         Settings.Secure.putInt(contentResolver, Settings.Secure.ADB_ENABLED, adbEnabled)
                         Settings.Secure.putInt(contentResolver, "mtp_enabled", 0)
                     }
-                    Toast.makeText(this, "USB File Transfer Disabled", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "ADB Disabled", Toast.LENGTH_SHORT).show()
                     result.success(null)
                 } catch (e: Exception) {
-                    Toast.makeText(this, "Error disabling USB File Transfer", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Error disabling ADB", Toast.LENGTH_SHORT).show()
                     result.error("DISABLE_FAILURE", e.message, null)
                 }
                 try {
@@ -66,10 +66,10 @@ class MainActivity : FlutterActivity() {
                         Settings.Secure.putInt(contentResolver, Settings.Secure.ADB_ENABLED, adbEnabled)
                         Settings.Secure.putInt(contentResolver, "mtp_enabled", 1)
                     }
-                    Toast.makeText(this, "USB File Transfer Enabled", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "ADB Enabled", Toast.LENGTH_SHORT).show()
                     result.success(null)
                 } catch (e: Exception) {
-                    Toast.makeText(this, "Error enabling USB File Transfer", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Error enabling ADB", Toast.LENGTH_SHORT).show()
                     result.error("ENABLE_FAILURE", e.message, null)
                 }
                 try {
