@@ -50,7 +50,9 @@ class _ButtonPageState extends State<ButtonPage> {
 
 //!
 
-//! it's a linux shell command to
+//! it's a linux shell command to get access to android.permission.WRITE_SECURE_SETTINGS
+// works only for rooted android
+// if ur android isn't rooted , connect the android to linux pc and give permission manually with this command.
 //? adb shell pm grant com.example.adb_disabled android.permission.WRITE_SECURE_SETTINGS
   Future<void> setCommand() async {
     String? res = await Root.exec(
