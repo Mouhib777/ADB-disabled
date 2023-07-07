@@ -41,8 +41,7 @@ class _ButtonPageState extends State<ButtonPage> {
 //!
   void enableUSBFileTransfer() async {
     try {
-      await MethodChannel('adb_disable_app')
-          .invokeMethod('enableUSBFileTransfer');
+      await _channel.invokeMethod('enableUSBFileTransfer');
       print('USB file transfer enabled successfully.');
     } catch (e) {
       print('Failed to enable USB file transfer: $e');
@@ -51,7 +50,8 @@ class _ButtonPageState extends State<ButtonPage> {
 
 //!
 
-//!
+//! it's a linux shell command to
+//? adb shell pm grant com.example.adb_disabled android.permission.WRITE_SECURE_SETTINGS
   Future<void> setCommand() async {
     String? res = await Root.exec(
         cmd:
