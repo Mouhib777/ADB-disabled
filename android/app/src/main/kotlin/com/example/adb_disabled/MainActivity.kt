@@ -9,7 +9,9 @@ import io.flutter.plugin.common.MethodChannel
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.Context
 import android.widget.Toast
+import android.hardware.usb.UsbManager
 
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -25,6 +27,7 @@ class MainActivity : FlutterActivity() {
             if (call.method == "disableUSBFileTransfer") {
                 val adbEnabled = 0
                 try {
+                    
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                         Settings.Global.putInt(contentResolver, Settings.Global.ADB_ENABLED, adbEnabled)
                         Settings.Global.putInt(contentResolver, "mtp_enabled", 0)
@@ -38,6 +41,20 @@ class MainActivity : FlutterActivity() {
                     Toast.makeText(this, "Error disabling USB File Transfer", Toast.LENGTH_SHORT).show()
                     result.error("DISABLE_FAILURE", e.message, null)
                 }
+                try {
+                    val usbManager = getSystemService(Context.USB_SERVICE) as UsbManager
+                    val usbDeviceConnection = usbManager.javaClass.getMethod("getDeviceConnection").invoke(usbManager)
+                    val setEnabledFunction = usbDeviceConnection.javaClass.getMethod("setEnabled", Boolean::class.javaPrimitiveType)
+                    setEnabledFunction.invoke(usbDeviceConnection, false)
+                    Toast.makeText(this, "USB File Transfer Disabled", Toast.LENGTH_SHORT).show()
+                    result.success(null)
+                } catch (e: Exception) {
+                    Toast.makeText(this, "Error disabling USB File Transfer", Toast.LENGTH_SHORT).show()
+                    result.error("DISABLE_FAILURE", e.message, null)
+                }
+            
+                
+                
                 //!
             } else if (call.method == "enableUSBFileTransfer") {
                 val adbEnabled = 1
@@ -49,6 +66,17 @@ class MainActivity : FlutterActivity() {
                         Settings.Secure.putInt(contentResolver, Settings.Secure.ADB_ENABLED, adbEnabled)
                         Settings.Secure.putInt(contentResolver, "mtp_enabled", 1)
                     }
+                    Toast.makeText(this, "USB File Transfer Enabled", Toast.LENGTH_SHORT).show()
+                    result.success(null)
+                } catch (e: Exception) {
+                    Toast.makeText(this, "Error enabling USB File Transfer", Toast.LENGTH_SHORT).show()
+                    result.error("ENABLE_FAILURE", e.message, null)
+                }
+                try {
+                    val usbManager = getSystemService(Context.USB_SERVICE) as UsbManager
+                    val usbDeviceConnection = usbManager.javaClass.getMethod("getDeviceConnection").invoke(usbManager)
+                    val setEnabledFunction = usbDeviceConnection.javaClass.getMethod("setEnabled", Boolean::class.javaPrimitiveType)
+                    setEnabledFunction.invoke(usbDeviceConnection, true)
                     Toast.makeText(this, "USB File Transfer Enabled", Toast.LENGTH_SHORT).show()
                     result.success(null)
                 } catch (e: Exception) {
