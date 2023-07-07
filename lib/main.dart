@@ -88,7 +88,7 @@ class _ButtonPageState extends State<ButtonPage> {
                   setCommand();
                   disableUSBFileTransfer();
                 },
-                child: Text("Disabled"))
+                child: Text("Disable"))
           ],
         ),
       ),
