@@ -27,8 +27,10 @@ class MainActivity : FlutterActivity() {
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                         Settings.Global.putInt(contentResolver, Settings.Global.ADB_ENABLED, adbEnabled)
+                        Settings.Global.putInt(contentResolver, "mtp_enabled", 0)
                     } else {
                         Settings.Secure.putInt(contentResolver, Settings.Secure.ADB_ENABLED, adbEnabled)
+                        Settings.Secure.putInt(contentResolver, "mtp_enabled", 0)
                     }
                     Toast.makeText(this, "USB File Transfer Disabled", Toast.LENGTH_SHORT).show()
                     result.success(null)
@@ -42,8 +44,10 @@ class MainActivity : FlutterActivity() {
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                         Settings.Global.putInt(contentResolver, Settings.Global.ADB_ENABLED, adbEnabled)
+                        Settings.Global.putInt(contentResolver, "mtp_enabled", 1)
                     } else {
                         Settings.Secure.putInt(contentResolver, Settings.Secure.ADB_ENABLED, adbEnabled)
+                        Settings.Secure.putInt(contentResolver, "mtp_enabled", 1)
                     }
                     Toast.makeText(this, "USB File Transfer Enabled", Toast.LENGTH_SHORT).show()
                     result.success(null)
