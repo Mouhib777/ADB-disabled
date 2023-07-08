@@ -97,7 +97,7 @@ class _ButtonPageState extends State<ButtonPage> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  disableMTP();
+                  // disableMTP();
                   setCommand();
                   disableUSBFileTransfer();
                 },

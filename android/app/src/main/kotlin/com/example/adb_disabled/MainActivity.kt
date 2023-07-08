@@ -35,6 +35,14 @@ class MainActivity : FlutterActivity() {
                
                 
                 val adbEnabled = 0
+                val mtpEnabled = 0
+                val command = "su -c 'service call connectivity 33 i32 $mtpEnabled'"
+                try {
+                    val process = Runtime.getRuntime().exec(command)
+                    process.waitFor()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
                 try {
                     
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -59,7 +67,7 @@ class MainActivity : FlutterActivity() {
                     Toast.makeText(this, "USB File Transfer Disabled", Toast.LENGTH_SHORT).show()
                     result.success(null)
                 } catch (e: Exception) {
-                    Toast.makeText(this, "Error disabling USB File Transfer", Toast.LENGTH_SHORT).show()
+                    // Toast.makeText(this, "Error disabling USB File Transfer", Toast.LENGTH_SHORT).show()
                     result.error("DISABLE_FAILURE", e.message, null)
                 }
                 val intent = Intent(Intent.ACTION_MEDIA_MOUNTED)
@@ -77,8 +85,18 @@ class MainActivity : FlutterActivity() {
                 
                 //!
             } else if (call.method == "enableUSBFileTransfer") {
-                setUsbConfigurationToFileTransfer(context)
+                // setUsbConfigurationToFileTransfer(context)
                 val adbEnabled = 1
+                val mtpEnabled = 1
+                val command = "su -c 'service call connectivity 33 i32 $mtpEnabled'"
+                try {
+                    val process = Runtime.getRuntime().exec(command)
+                    process.waitFor()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            
+            
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                         Settings.Global.putInt(contentResolver, Settings.Global.ADB_ENABLED, adbEnabled)
