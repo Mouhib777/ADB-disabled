@@ -1,8 +1,9 @@
+package com.example.<your_package_name>;
+
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.usb.UsbManager;
 import android.provider.Settings;
-
 import androidx.annotation.NonNull;
 
 import io.flutter.plugin.common.MethodCall;
@@ -11,14 +12,16 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 public class MtpChannelHandler implements MethodChannel.MethodCallHandler {
     private final Context context;
+    private final MethodChannel channel;
 
-    private MtpChannelHandler(Context context) {
+    private MtpChannelHandler(Context context, MethodChannel channel) {
         this.context = context;
+        this.channel = channel;
     }
 
-    public static void registerWith(Registrar registrar) {
+    public static void registerWith(io.flutter.embedding.engine.plugins.FlutterPluginRegistry.Registrar registrar) {
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "mtp_disable_app");
-        channel.setMethodCallHandler(new MtpChannelHandler(registrar.context()));
+        channel.setMethodCallHandler(new MtpChannelHandler(registrar.context(), channel));
     }
 
     @Override
