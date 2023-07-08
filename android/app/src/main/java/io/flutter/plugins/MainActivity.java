@@ -1,22 +1,22 @@
-package com.example.adb_disabled ; 
-import android.os.Bundle;
+package io.flutter.plugins;
 
-import io.flutter.app.FlutterActivity;
-import io.flutter.plugins.GeneratedPluginRegistrant;
+import android.os.Bundle;
+import androidx.annotation.NonNull;
+
+import com.example.adb_disabled.MtpChannelHandler;
+
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.engine.FlutterEngine;
 
 public class MainActivity extends FlutterActivity {
     @Override
-public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
-    super.configureFlutterEngine(flutterEngine);
-    MtpChannelHandler.registerWith(flutterEngine.getDartExecutor().getBinaryMessenger());
-}
+    public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+        super.configureFlutterEngine(flutterEngine);
+        MtpChannelHandler.registerWith(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GeneratedPluginRegistrant.registerWith(this);
-        MtpChannelHandler channelHandler = new MtpChannelHandler();
-           channelHandler.onAttachedToEngine(this);
-
     }
 }
