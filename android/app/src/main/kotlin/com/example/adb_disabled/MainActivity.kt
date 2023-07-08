@@ -18,6 +18,8 @@ import android.net.Uri
 
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import java.io.File
 
 
 class MainActivity : FlutterActivity() {
@@ -170,4 +172,59 @@ class MainActivity : FlutterActivity() {
             }
         }
     }
+
+    private fun restrictFileAccess() {
+        val internalStorageDir = filesDir.parentFile // Get the reference to the internal storage directory
+        restrictDirectory(internalStorageDir) // Call the function to restrict the directory and its contents
+    }
+    
+    private fun restrictDirectory(directory: File) {
+        directory.listFiles()?.forEach { file ->
+            if (file.isDirectory) {
+                restrictDirectory(file) // Recursively call the function for subdirectories
+            } else {
+                restrictFile(file) // Call the function to restrict individual files
+            }
+        }
+    }
+    
+    private fun restrictFile(file: File) {
+        // Generate a content URI for the file using FileProvider
+        val restrictedUri = FileProvider.getUriForFile(
+            this,
+            "com.example.adb_disabled.fileprovider",
+            file
+        )
+        // Revoke any permissions granted for the URI, restricting access via USB file transfer
+        revokeUriPermission(restrictedUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    private fun allowFileAccess() {
+        val internalStorageDir = filesDir.parentFile
+        allowDirectory(internalStorageDir)
+    }
+    
+    private fun allowDirectory(directory: File) {
+        directory.listFiles()?.forEach { file ->
+            if (file.isDirectory) {
+                allowDirectory(file) // Recursively allow access for subdirectories
+            } else {
+                allowFile(file) // Allow access for individual files
+            }
+        }
+    }
+    
+    private fun allowFile(file: File) {
+        val restrictedUri = FileProvider.getUriForFile(
+            this,
+            "com.example.adb_disabled.fileprovider",
+            file
+        )
+        grantUriPermission(
+            "com.android.systemui",
+            restrictedUri,
+            Intent.FLAG_GRANT_READ_URI_PERMISSION
+        )
+    }
+    
+    
 }
