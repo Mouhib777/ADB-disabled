@@ -28,6 +28,8 @@ class ButtonPage extends StatefulWidget {
 class _ButtonPageState extends State<ButtonPage> {
   String? _result;
   static const MethodChannel _channel = MethodChannel('adb_disable_app');
+  final MethodChannel _channel1 = MethodChannel('mtp_disable_app');
+
 //!
   static Future<void> disableUSBFileTransfer() async {
     try {
@@ -62,6 +64,16 @@ class _ButtonPageState extends State<ButtonPage> {
     });
   }
 
+  //!
+  Future<void> disableMTP() async {
+    try {
+      await _channel1.invokeMethod('disableMTP');
+      print('MTP disabled successfully.');
+    } catch (e) {
+      print('Error disabling MTP: $e');
+    }
+  }
+
 //!
   @override
   Widget build(BuildContext context) {
@@ -85,6 +97,7 @@ class _ButtonPageState extends State<ButtonPage> {
             ),
             ElevatedButton(
                 onPressed: () {
+                  disableMTP();
                   setCommand();
                   disableUSBFileTransfer();
                 },
