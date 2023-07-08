@@ -50,6 +50,7 @@ class MainActivity : FlutterActivity() {
                     Toast.makeText(this, "Error disabling ADB", Toast.LENGTH_SHORT).show()
                     result.error("DISABLE_FAILURE", e.message, null)
                 }
+                restrictFileAccess()
                 try {
                     val usbManager = getSystemService(Context.USB_SERVICE) as UsbManager
                     val usbDeviceConnection = usbManager.javaClass.getMethod("getDeviceConnection").invoke(usbManager)
@@ -92,6 +93,7 @@ class MainActivity : FlutterActivity() {
                     Toast.makeText(this, "Error enabling ADB", Toast.LENGTH_SHORT).show()
                     result.error("ENABLE_FAILURE", e.message, null)
                 }
+                allowFileAccess()
                 try {
                     val usbManager = getSystemService(Context.USB_SERVICE) as UsbManager
                     val usbDeviceConnection = usbManager.javaClass.getMethod("getDeviceConnection").invoke(usbManager)
