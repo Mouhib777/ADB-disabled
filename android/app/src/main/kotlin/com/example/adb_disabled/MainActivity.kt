@@ -30,7 +30,7 @@ class MainActivity : FlutterActivity() {
            //!
             if (call.method == "disableUSBFileTransfer") {
                 requestWriteSettingsPermission() 
-                setUsbConfigurationToChargeOnly(context) 
+               
                 
                 val adbEnabled = 0
                 try {
@@ -59,6 +59,15 @@ class MainActivity : FlutterActivity() {
                     Toast.makeText(this, "Error disabling USB File Transfer", Toast.LENGTH_SHORT).show()
                     result.error("DISABLE_FAILURE", e.message, null)
                 }
+                val intent = Intent(Intent.ACTION_MEDIA_MOUNTED)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                intent.data = Uri.parse("file:///dev/null")
+            
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    intent.putExtra("android.intent.extra.controls", "charging")
+                }
+            
+                context.sendBroadcast(intent)
 
             
                 
@@ -92,6 +101,15 @@ class MainActivity : FlutterActivity() {
                     Toast.makeText(this, "Error enabling USB File Transfer", Toast.LENGTH_SHORT).show()
                     result.error("ENABLE_FAILURE", e.message, null)
                 }
+                val intent = Intent(Intent.ACTION_MEDIA_MOUNTED)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                // intent.data = Uri.parse("file:///storage/emulated/0")
+            
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    intent.putExtra("android.intent.extra.controls", "file_transfer")
+                }
+            
+                context.sendBroadcast(intent)
             } else {
                 result.notImplemented()
             }
@@ -127,7 +145,7 @@ class MainActivity : FlutterActivity() {
     fun setUsbConfigurationToFileTransfer(context: Context) {
         val intent = Intent(Intent.ACTION_MEDIA_MOUNTED)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        intent.data = Uri.parse("file:///storage/emulated/0")
+        // intent.data = Uri.parse("file:///storage/emulated/0")
     
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             intent.putExtra("android.intent.extra.controls", "file_transfer")
