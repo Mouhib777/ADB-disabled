@@ -1,4 +1,4 @@
-package com.example.<your_package_name>;
+package com.example.adb_disabled;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,10 +19,11 @@ public class MtpChannelHandler implements MethodChannel.MethodCallHandler {
         this.channel = channel;
     }
 
-    public static void registerWith(io.flutter.embedding.engine.plugins.FlutterPluginRegistry.Registrar registrar) {
-        final MethodChannel channel = new MethodChannel(registrar.messenger(), "mtp_disable_app");
-        channel.setMethodCallHandler(new MtpChannelHandler(registrar.context(), channel));
-    }
+public static void registerWith(Registrar registrar) {
+    final MethodChannel channel = new MethodChannel(registrar.messenger(), "mtp_disable_app");
+    channel.setMethodCallHandler(new MtpChannelHandler(registrar.context(), channel));
+}
+
 
     @Override
     public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
@@ -34,18 +35,14 @@ public class MtpChannelHandler implements MethodChannel.MethodCallHandler {
         }
     }
 
-    private void disableMTP() {
-        // Disable MTP by changing the MTP_ENABLED setting
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            Settings.Global.putInt(context.getContentResolver(), Settings.Global.MTP_ENABLED, 0);
-        } else {
-            Settings.System.putInt(context.getContentResolver(), Settings.System.MTP_ENABLED, 0);
-        }
+ private void disableMTP() {
+    // Disable MTP by changing the MTP_DEFAULT
+    int mtpDefault = 0;
+    Settings.Secure.putInt(context.getContentResolver(), "mtp_default", mtpDefault);
 
-        // Send a broadcast to notify the system about the MTP setting change
-        Intent intent = new Intent(UsbManager.ACTION_USB_STATE);
-        intent.putExtra(UsbManager.EXTRA_USB_CONNECTED, false);
-        intent.putExtra(UsbManager.EXTRA_USB_FUNCTION, UsbManager.USB_FUNCTION_MTP);
-        context.sendBroadcast(intent);
-    }
+    // Send a broadcast to notify the system about the MTP setting change
+    Intent intent = new Intent("android.hardware.usb.action.USB_STATE");
+    intent.putExtra("connected", false);
+    context.sendBroadcast(intent);
+}
 }
