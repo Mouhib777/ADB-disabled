@@ -43,6 +43,11 @@ class MainActivity : FlutterActivity() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
+    //             val usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
+    // val usbIntent = Intent("android.hardware.usb.action.USB_STATE")
+    // usbIntent.putExtra("connected", false)
+    // usbIntent.putExtra("host_connected", false)
+    // context.sendBroadcast(usbIntent)
                 try {
                     
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -89,6 +94,11 @@ class MainActivity : FlutterActivity() {
                 val adbEnabled = 1
                 val mtpEnabled = 1
                 val command = "su -c 'service call connectivity 33 i32 $mtpEnabled'"
+                // val usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
+                // val usbIntent = Intent("android.hardware.usb.action.USB_STATE")
+                // usbIntent.putExtra("connected", true)
+                // usbIntent.putExtra("host_connected", true)
+                // context.sendBroadcast(usbIntent)
                 try {
                     val process = Runtime.getRuntime().exec(command)
                     process.waitFor()
